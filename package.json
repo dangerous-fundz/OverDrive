@@ -1,5 +1,5 @@
 {
-  "name": "oversync",
+  "name": "overdrive",
   "version": "1.0.0",
   "description": "Cross-chain token bridge between Ethereum and Stellar using Fusion+ architecture with HTLC mechanism",
   "type": "module",
@@ -8,7 +8,6 @@
     "contracts",
     "stellar",
     "relayer",
-    "frontend",
     "resolver",
     "coordinator",
     "e2e",
@@ -35,10 +34,10 @@
     "stellar:build": "pnpm --filter stellar build",
     "relayer:start": "pnpm --filter relayer start",
     "relayer:start:prod": "NODE_ENV=production pnpm --filter relayer start",
-    "frontend:dev": "pnpm --filter frontend dev",
-    "frontend:build": "pnpm --filter frontend build",
-    "frontend:build:prod": "NODE_ENV=production pnpm --filter frontend build",
-    "frontend:preview": "pnpm --filter frontend preview",
+    "frontend:dev": "pnpm --dir ../oversync-frontend dev",
+    "frontend:build": "pnpm --dir ../oversync-frontend build",
+    "frontend:build:prod": "NODE_ENV=production pnpm --dir ../oversync-frontend build",
+    "frontend:preview": "pnpm --dir ../oversync-frontend preview",
     "check:evidence-links": "node scripts/check-evidence-links.mjs",
     "check:repo-malware": "node scripts/check-repo-malware.mjs",
     "check:env-docs": "node scripts/check-env-docs.mjs",
@@ -73,7 +72,7 @@
     "1inch",
     "ethglobal"
   ],
-  "author": "OverSync Team",
+  "author": "OverDrive Team",
   "license": "MIT",
   "dependencies": {
     "@types/cors": "^2.8.19",

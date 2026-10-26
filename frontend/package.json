@@ -1,7 +1,7 @@
 {
   "name": "@oversync/frontend",
   "version": "1.0.0",
-  "description": "Frontend interface for OverSync cross-chain token swaps",
+  "description": "Frontend interface for OverDrive cross-chain token swaps",
   "type": "module",
   "scripts": {
     "dev": "vite",

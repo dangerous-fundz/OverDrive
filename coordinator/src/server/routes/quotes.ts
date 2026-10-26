@@ -29,7 +29,8 @@ export function quotesRoutes(quotes: QuoteService): Router {
    */
   router.get("/quotes/eth-xlm", async (req, res, next) => {
     try {
-      const terms = quoteTermsSchema.parse(req.query);
+      const hasQuery = Object.keys(req.query).length > 0;
+      const terms = hasQuery ? quoteTermsSchema.parse(req.query) : undefined;
       const quote = await quotes.quoteEthXlm(terms);
       res.json({
         quoteId: quote.quoteId,

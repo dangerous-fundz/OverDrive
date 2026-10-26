@@ -241,7 +241,7 @@ function App() {
       {showIntro && (
         <div
           className={`intro-screen${introLogoReady ? ' intro-screen--ready' : ''}${introClosing ? ' intro-screen--closing' : ''}`}
-          aria-label="OverSync loading"
+          aria-label="OverDrive loading"
         >
           <div className="intro-card">
             <div className="intro-rail">
@@ -250,8 +250,8 @@ function App() {
               </div>
               <div className="intro-logo-wrap">
                 <img
-                  src="/images/oversync-logo.png"
-                  alt="OverSync"
+                  src="/images/overdrive-logo.png"
+                  alt="OverDrive"
                   className="intro-logo"
                   loading="eager"
                   decoding="sync"
@@ -264,7 +264,7 @@ function App() {
               </div>
             </div>
             <div className="intro-copy">
-              <p>OverSync</p>
+              <p>OverDrive</p>
               <span>Fusion Rail</span>
             </div>
             <div className="intro-loader" />
@@ -277,12 +277,12 @@ function App() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <img
-            src="/images/oversync-logo.png"
-            alt="OverSync"
+            src="/images/overdrive-logo.png"
+            alt="OverDrive"
             className="h-11 w-11 rounded-xl border border-cyan-200/20 shadow-[0_0_30px_rgba(0,226,255,0.2)]"
           />
           <div>
-            <span className="block text-lg font-semibold tracking-tight text-white">OverSync</span>
+            <span className="block text-lg font-semibold tracking-tight text-white">OverDrive</span>
             <span className="hidden text-xs uppercase tracking-[0.32em] text-indigo-200/75 sm:block">Fusion Rail</span>
           </div>
         </div>

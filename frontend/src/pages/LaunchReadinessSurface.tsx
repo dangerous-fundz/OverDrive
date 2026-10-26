@@ -25,7 +25,7 @@ export default function LaunchReadinessSurface() {
             </span>
             <div>
               <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-100/70">
-                OverSync v2
+                OverDrive v2
               </p>
               <h1 className="text-xl font-semibold text-white md:text-2xl">
                 Launch readiness

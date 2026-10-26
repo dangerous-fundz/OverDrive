@@ -2,7 +2,6 @@ packages:
   - 'contracts'
   - 'stellar'
   - 'relayer'
-  - 'frontend'
   - 'resolver'
   - 'coordinator'
   - 'e2e'

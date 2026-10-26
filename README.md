@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="frontend/public/images/oversync-logo.png" alt="OverSync" width="240" />
+  <img src="frontend/public/images/overdrive-logo.png" alt="OverDrive" width="240" />
 </p>
 
-# OverSync
+# OverDrive
 
 **A non-custodial Ethereum ↔ Stellar bridge built on symmetric HTLCs — no validator set, no attester, no admin escape hatch.**
 
 
-OverSync moves native assets between Ethereum and Stellar atomically.
+OverDrive moves native assets between Ethereum and Stellar atomically.
 Funds are locked in hash-time-lock contracts on both chains; settlement
 is a `sha256` preimage reveal, not a multisig attestation. If anything
 in the bridge fails — coordinator down, resolver malicious, RPC
@@ -39,7 +39,7 @@ state in which user funds are stranded under operator control.
 
 ---
 
-## Why OverSync exists
+## Why OverDrive exists
 
 Historically, cross-chain bridges have caused some of the largest losses
 in DeFi (Ronin $625M, Wormhole $325M, Multichain $231M). The common
@@ -47,10 +47,10 @@ failure pattern is the same: an off-chain validator quorum that signs
 proofs of locks gets compromised, and the wrapped tokens on the
 destination chain get minted without a real lock.
 
-OverSync gives up the convenience of validator-set bridging in
+OverDrive gives up the convenience of validator-set bridging in
 exchange for a strictly weaker trust assumption:
 
-| Compromise that lets attacker steal locked funds | Validator-set bridge (Axelar, Allbridge, Wormhole-style) | OverSync v2 |
+| Compromise that lets attacker steal locked funds | Validator-set bridge (Axelar, Allbridge, Wormhole-style) | OverDrive v2 |
 |---|---|---|
 | Compromise an off-chain signer quorum | **Yes** | **No** — no privileged signer exists in the HTLC |
 | Compromise a first-party attester (Circle CCTP, etc.) | **Yes** (for attester bridges) | **No** — no attester is consulted |
@@ -139,7 +139,7 @@ refund mechanism stack) is in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ## Refund layers — why funds cannot be lost
 
-OverSync ships **four** independent refund mechanisms. Each one is a
+OverDrive ships **four** independent refund mechanisms. Each one is a
 backstop for the previous one. Even with three of the four offline, a
 user always has a way to recover their funds.
 
@@ -174,7 +174,7 @@ The architectural rationale and exact code paths are in
 ## Repository layout
 
 ```
-OverSync-1nchFusion/
+OverDrive/
 ├── soroban/                      # Rust workspace — Soroban contracts
 │   ├── contracts/htlc/           # oversync-htlc (HTLC for Stellar)
 │   └── contracts/resolver-registry/
@@ -197,8 +197,8 @@ OverSync-1nchFusion/
 Requires Node 22.5+ (built-in `node:sqlite`), pnpm 9+, Rust + `stellar-cli`, and Foundry/Hardhat.
 
 ```bash
-git clone https://github.com/karagozemin/OverSync-1nchFusion
-cd OverSync-1nchFusion
+git clone https://github.com/karagozemin/OverDrive
+cd OverDrive
 pnpm install
 cp env.example .env
 
@@ -250,7 +250,7 @@ a `hashlock` and a `timelock`. The locked funds can only be moved by:
    digest matches `hashlock`, before `timelock`.
 2. Anyone (typically the user) calling `refund` after `timelock`. The
    funds return to the original `refundAddress` — which is **always
-   the user** in OverSync v2.
+   the user** in OverDrive v2.
 
 The coordinator never signs a transaction that could move user funds
 without one of these conditions being satisfied. Resolvers stake into
@@ -269,7 +269,7 @@ threat model.
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Developer setup, CI test matrix, pull request expectations, and the [contributor proof checklist](.github/pull_request_template.md) |
 | [`ROADMAP.md`](ROADMAP.md) | Milestone-by-milestone delivery plan with verifiable artefacts; testnet v2 live, mainnet UI gated until audit |
 | [`docs/TRUST_MODEL.md`](docs/TRUST_MODEL.md) | Non-custodial proofs and per-actor threat analysis |
-| [`docs/DIFFERENTIATION.md`](docs/DIFFERENTIATION.md) | Comparison with CCTP v2, Axelar ITS, Allbridge; where OverSync is the right vs wrong tool |
+| [`docs/DIFFERENTIATION.md`](docs/DIFFERENTIATION.md) | Comparison with CCTP v2, Axelar ITS, Allbridge; where OverDrive is the right vs wrong tool |
 | [`docs/TRACTION.md`](docs/TRACTION.md) | Go-to-market, KPIs we publish, partnership pipeline |
 | [`docs/METRICS_SCHEMA.md`](docs/METRICS_SCHEMA.md) | Public metrics schema: definitions, units, sources, cadence, and privacy boundaries |
 | [`docs/UNIT_ECONOMICS.md`](docs/UNIT_ECONOMICS.md) | Resolver cost model, bootstrap incentives, break-even ranges, and metrics needed before stronger claims |

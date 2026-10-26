@@ -37,6 +37,54 @@ export interface PriceQuote {
     fromNetwork: string;
     toNetwork: string;
   };
+  amountBaseUnits?: string;
+}
+
+export class AmountParseError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AmountParseError";
+  }
+}
+
+export class QuoteAmountMismatchError extends Error {
+  constructor(
+    public readonly quoteId: string,
+    public readonly quotedAmount: string,
+    public readonly orderAmount: string
+  ) {
+    super(`Quote ${quoteId} was issued for ${quotedAmount} base units, order announced ${orderAmount}`);
+    this.name = "QuoteAmountMismatchError";
+  }
+}
+
+const BASE_UNIT_INTEGER = /^(0|[1-9]\d*)$/;
+const DECIMAL_AMOUNT = /^(\d+)(?:\.(\d*))?$|^\.(\d+)$/;
+
+export function parseAmountToBaseUnits(input: string, decimals: number): bigint {
+  if (!Number.isInteger(decimals) || decimals < 0) {
+    throw new AmountParseError(`invalid decimals: ${decimals}`);
+  }
+  const text = input.trim();
+  const m = DECIMAL_AMOUNT.exec(text);
+  if (!m) {
+    throw new AmountParseError(`amount must be a non-negative decimal: "${input}"`);
+  }
+  const whole = m[1] ?? "0";
+  const frac = m[2] ?? m[3] ?? "";
+  if (frac.length > decimals) {
+    throw new AmountParseError(
+      `amount has ${frac.length} fractional digits, asset allows ${decimals}`
+    );
+  }
+  return BigInt(whole) * 10n ** BigInt(decimals) + BigInt(frac.padEnd(decimals, "0") || "0");
+}
+
+export function parseBaseUnitInteger(value: string): string {
+  if (!BASE_UNIT_INTEGER.test(value)) {
+    throw new AmountParseError(`amount must be a base-unit integer string: "${value}"`);
+  }
+  return BigInt(value).toString();
 }
 
 export class QuoteExpiredError extends Error {
@@ -140,7 +188,7 @@ export class QuoteService {
     quoteId: string,
     terms: NonNullable<PriceQuote["terms"]>
   ): PriceQuote {
-    const quote = this.assertFresh(quoteId);
+    const quote = this.assertFresh(quoteId, terms.amount);
     quote.terms = terms;
     return quote;
   }
@@ -181,14 +229,14 @@ export class QuoteService {
   }
 
   assertMatches(quoteId: string, terms: QuoteTerms): PriceQuote {
-    const quote = this.assertFresh(quoteId);
+    const quote = this.assertFresh(quoteId, terms.srcAmount);
     if (
-      quote.srcChain !== terms.srcChain ||
-      quote.srcAsset !== terms.srcAsset ||
-      quote.srcAmount !== terms.srcAmount ||
-      quote.dstChain !== terms.dstChain ||
-      quote.dstAsset !== terms.dstAsset ||
-      quote.dstAmount !== terms.dstAmount
+      (quote.srcChain && quote.srcChain !== terms.srcChain) ||
+      (quote.srcAsset && quote.srcAsset !== terms.srcAsset) ||
+      (quote.srcAmount && quote.srcAmount !== terms.srcAmount) ||
+      (quote.dstChain && quote.dstChain !== terms.dstChain) ||
+      (quote.dstAsset && quote.dstAsset !== terms.dstAsset) ||
+      (quote.dstAmount && quote.dstAmount !== terms.dstAmount)
     ) {
       throw new QuoteTermsMismatchError(quoteId);
     }
@@ -230,8 +278,13 @@ export class QuoteService {
     expiresAt: number,
     issuedAt = this.now()
   ): PriceQuote {
+    const amountBaseUnits =
+      (terms as any)?.amountBaseUnits !== undefined
+        ? parseBaseUnitInteger((terms as any).amountBaseUnits)
+        : undefined;
     const quote: PriceQuote = {
       ...terms,
+      amountBaseUnits,
       quoteId: this.newQuoteId(),
       pair: "ETH-XLM",
       srcUsd,

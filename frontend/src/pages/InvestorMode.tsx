@@ -64,7 +64,7 @@ export default function InvestorMode() {
       <section className="mb-6 rounded-lg border border-green-300/30 bg-green-900/30 p-6">
         <h2 className="mb-2 text-2xl font-semibold">Non‑Custodial Security Model</h2>
         <p>
-          OverSync uses an HTLC‑based atomic swap architecture. Funds never leave the user's wallet – they are locked on‑chain and released only when both sides fulfill the hash‑time‑locked conditions.
+          OverDrive uses an HTLC‑based atomic swap architecture. Funds never leave the user's wallet – they are locked on‑chain and released only when both sides fulfill the hash‑time‑locked conditions.
         </p>
       </section>
 
